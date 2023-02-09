@@ -8,9 +8,10 @@
 import Foundation
 import CoreLocation
 
-protocol LocationServiceDelegate: class {
+// позволит создавать слабые ссылки и избежать retain cycle: AnyObject
+protocol LocationServiceDelegate: AnyObject {
     // Delegate protocol
-    func didUpdateLocation()
+    func didUpdateLocation(currentLocation: CLLocation)
 }
 
 typealias CurrentLocationInfo = (lat: CLLocationDegrees, long: CLLocationDegrees)
@@ -49,7 +50,6 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
     
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation], complition : @escaping (CurrentLocationInfo, CLLocation ) -> Void ) {
         if let location = locations.last {
             currentLocation = location
@@ -58,7 +58,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             let currentLocationInfo: CurrentLocationInfo = (lat, long)
             complition(currentLocationInfo, location)
             locationManager.stopUpdatingLocation()
-            self.delegate?.didUpdateLocation()
+            self.delegate?.didUpdateLocation(currentLocation: location)
             
         }
     }
