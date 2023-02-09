@@ -19,7 +19,7 @@ final class MainVM: MainVMProtocol {
     
     var locationDidUpdate: ((CurrentLocationInfo) -> Void)?
     
-    let locationService = LocationService()
+    let locationService = LocationService() 
 
     var addres: String?
     var currentLocation : CLLocation?

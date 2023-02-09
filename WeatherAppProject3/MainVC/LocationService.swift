@@ -50,17 +50,16 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation], complition : @escaping (CurrentLocationInfo, CLLocation ) -> Void ) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             currentLocation = location
             let lat = location.coordinate.latitude
             let long = location.coordinate.longitude
             let currentLocationInfo: CurrentLocationInfo = (lat, long)
-            complition(currentLocationInfo, location)
-            locationManager.stopUpdatingLocation()
             self.delegate?.didUpdateLocation(currentLocation: location)
-            
-        }
+
+        }else {print("Location not  found")}
+        locationManager.stopUpdatingLocation()
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("LocationManagerError: \(error)")
