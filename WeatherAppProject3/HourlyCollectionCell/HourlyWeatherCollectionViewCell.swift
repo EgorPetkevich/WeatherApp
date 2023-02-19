@@ -19,6 +19,7 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
     }
 
     static var indentifier = "HourlyWeatherCollectionViewCell"

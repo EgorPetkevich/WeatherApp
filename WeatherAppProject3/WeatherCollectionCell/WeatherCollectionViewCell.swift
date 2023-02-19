@@ -9,14 +9,24 @@ import UIKit
 
 import UIKit
 
+
+
 class WeatherCollectionViewCell: UICollectionViewCell {
     @IBOutlet var tableView: UITableView!
     var model = [CurrentConditions]()
+    
+    func mainVC() -> UIViewController {
+        return UIViewController(nibName: MainVC.indentifire, bundle: nil)
+        
+    }
+    
+    weak  var cellDelegate: WeatherCollectionViewCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         registerCells()
         sendTableViewData()
+        
         
         
     }
@@ -56,15 +66,27 @@ extension WeatherCollectionViewCell: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         if let WeatherCell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as? WeatherTableViewCell {
-            
+
             WeatherCell.configure(whith: model[indexPath.row])
-            
+
             return WeatherCell
         }
-        
+
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { 
+       
+        cellDelegate?.collectionView(collectioncell: self, index: indexPath.row, didTappedInTableViewCell: tableView.cellForRow(at: indexPath) ?? UITableViewCell())
+        
+    }
     
     
 }
+
+
+
+
+    
+    
+

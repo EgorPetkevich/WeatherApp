@@ -12,11 +12,14 @@ class HourlyCollectionViewCell: UICollectionViewCell {
     var model = [CurrentConditions]()
    
     override func awakeFromNib() {
+        
         super.awakeFromNib()
         registerCells()
         sendCollectionViewData()
         
     }
+    
+    weak  var cellDelegate: HourlyCollectionViewCellDelegate?
 
     static let identifier = "HourlyCollectionViewCell"
     
@@ -43,6 +46,8 @@ extension HourlyCollectionViewCell: UICollectionViewDelegate, UICollectionViewDa
     func sendCollectionViewData() {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
+        self.collectionView.allowsSelection = true
+        self.collectionView.allowsMultipleSelection = true
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -62,6 +67,9 @@ extension HourlyCollectionViewCell: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 100)
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        cellDelegate?.collectionView(collectioncell: self, index: indexPath.row, didTappedInCollectionViewCell: collectionView.cellForItem(at: indexPath) ?? UICollectionViewCell())
     }
     
 }

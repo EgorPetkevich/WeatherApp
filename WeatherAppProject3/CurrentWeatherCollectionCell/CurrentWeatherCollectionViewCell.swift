@@ -66,3 +66,6 @@ final class CurrentWeatherCollectionViewCell: UICollectionViewCell {
     }
     
 }
+
+
+

@@ -12,35 +12,52 @@ import CoreLocation
 import Foundation
 
 
-class MainVC: UIViewController {
-    
-    
-    var MainViewModel: MainVMProtocol = MainVM()
-    
-    
-    
-    
-    
-    static var indentifire = "ViewController"
-    
-    
-    static func nib() -> UINib{
-        return UINib(nibName: "ViewController", bundle: nil)
+class MainVC: UIViewController, WeatherCollectionViewCellDelegate, HourlyCollectionViewCellDelegate {
+    func collectionView(collectioncell: UICollectionViewCell?, index: Int, didTappedInCollectionViewCell: UICollectionViewCell) {
+        let model = mainViewModel.WeatherModel?.days[0].hours ?? []
+        let presentVC = CellWeatherDescriptionConfigurator.makeVC(model: model[index])
+        self.present(presentVC, animated: true)
     }
     
+    
+    func collectionView(collectioncell: UICollectionViewCell?, index: Int, didTappedInTableViewCell: UITableViewCell) {
+        let model = mainViewModel.WeatherModel?.days ?? []
+        let presentVC = CellWeatherDescriptionConfigurator.makeVC(model: model[index])
+        self.present(presentVC, animated: true)
+    }
+    
+    
+    
+    
+    var cellTableView: WeatherCollectionViewCellDelegate?
+    
+    
+    static var indentifire = "MainVC"
+    
+    static func nib() -> UINib{
+        return UINib(nibName: "MainVC", bundle: nil)
+    }
+    
+    
+    @IBOutlet var collectionView: UICollectionView!
+    
+    var mainViewModel: MainVMProtocol
+    
+    
+    init(mainViewModel: MainVMProtocol) {
+        self.mainViewModel = mainViewModel
+        super.init(nibName: "\(MainVC.self)", bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         
     }
-
-    
-    @IBOutlet var collectionView: UICollectionView!
-    
-    
-
-   
-
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,25 +66,22 @@ class MainVC: UIViewController {
         
         registerCells()
         
-        MainViewModel.loadData()
+        mainViewModel.loadData()
         setupCollectionView()
         
         
         
     }
     private func bind() {
-        self.MainViewModel.contentDidUpdate = {self.collectionView.reloadData()}
+        self.mainViewModel.contentDidUpdate = {self.collectionView.reloadData()}
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-       
+        
     }
-    
- 
-    
     
     
     private func registerCells() {
@@ -76,7 +90,7 @@ class MainVC: UIViewController {
         collectionView.register(HourlyCollectionViewCell.nib(), forCellWithReuseIdentifier: HourlyCollectionViewCell.identifier)
     }
     
-
+    
 }
 
 
@@ -86,8 +100,10 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     
     
     func setupCollectionView () {
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.allowsSelection = true
+        self.collectionView.allowsMultipleSelection = true
     }
     
     
@@ -134,8 +150,8 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
         if indexPath.section == 0 {
             guard let currentWeatherCell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrentWeatherCollectionViewCell.identifire, for: indexPath) as? CurrentWeatherCollectionViewCell else {return cell}
             
-//            currentWeatherCell.configure(whith: currentWeather, addres: addres)
-            currentWeatherCell.configure(whith: MainViewModel.WeatherModel?.currentConditions, addres: MainViewModel.addres)
+            //            currentWeatherCell.configure(whith: currentWeather, addres: addres)
+            currentWeatherCell.configure(whith: mainViewModel.WeatherModel?.currentConditions, addres: mainViewModel.addres)
             
             return currentWeatherCell
         }
@@ -144,9 +160,9 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
         if indexPath.section == 1 {
             guard let HourlyWeatherCell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(HourlyCollectionViewCell.self)", for: indexPath) as? HourlyCollectionViewCell else {return cell}
             
-//            HourlyWeatherCell.configure(whith: houryModels)
+            //            HourlyWeatherCell.configure(whith: houryModels)
             
-            HourlyWeatherCell.configure(whith: MainViewModel.WeatherModel?.days[0].hours ?? [])
+            HourlyWeatherCell.configure(whith: mainViewModel.WeatherModel?.days[0].hours ?? [])
             
             
             return HourlyWeatherCell
@@ -155,8 +171,10 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
         if indexPath.section == 2 {
             guard let WeatherCell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(WeatherCollectionViewCell.self)", for: indexPath) as? WeatherCollectionViewCell else {return cell}
             
-//            WeatherCell.configure(whith: dailyModels)
-            WeatherCell.configure(whith: MainViewModel.WeatherModel?.days ?? [])
+            WeatherCell.cellDelegate = self
+            
+            //            WeatherCell.configure(whith: dailyModels)
+            WeatherCell.configure(whith: mainViewModel.WeatherModel?.days ?? [])
             
             return WeatherCell
         }

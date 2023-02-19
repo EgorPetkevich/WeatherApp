@@ -8,5 +8,5 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    var NetworkService: NetworkService? {get}
+    var networkService: NetworkService {get}
 }

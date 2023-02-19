@@ -12,6 +12,6 @@ protocol MainVMProtocol {
     var addres: String? {get}
     var contentDidUpdate: (() -> Void)? {get set}
     
-    func loadData()
+    func loadData() 
     
 }

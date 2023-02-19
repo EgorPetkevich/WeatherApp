@@ -79,7 +79,7 @@ struct CurrentConditions: Decodable{
         self.datetimeEpoch = try? container.decode(Int.self, forKey: .datetimeEpoch)
         self.temp = try container.decode(Double.self, forKey: .temp)
         self.feelslike = try container.decode(Double.self, forKey: .feelslike)
-        self.snow = try container.decodeIfPresent(Int.self, forKey: .snow)
+        self.snow = try? container.decodeIfPresent(Int.self, forKey: .snow)
         self.windspeed = try container.decode(Double.self, forKey: .windspeed)
         self.pressure = try container.decode(Double.self, forKey: .pressure)
         self.cloudcover = try container.decode(Double.self, forKey: .cloudcover)
