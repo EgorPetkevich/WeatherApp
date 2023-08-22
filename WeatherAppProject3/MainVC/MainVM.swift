@@ -9,10 +9,11 @@
 
 import Foundation
 import CoreLocation
+import UIKit
 
 final class MainVM: MainVMProtocol {
     
-    
+ 
     var WeatherModel: WeatherResponse?
     
     var contentDidUpdate: (() -> Void)?
@@ -71,4 +72,7 @@ extension MainVM: LocationServiceDelegate {
 }
 
 
+
+    
+    
 

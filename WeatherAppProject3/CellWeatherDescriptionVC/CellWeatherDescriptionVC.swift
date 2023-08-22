@@ -7,6 +7,12 @@
 
 import UIKit
 
+
+
+
+
+
+
 class CellWeatherDescriptionVC: UIViewController {
 
    
@@ -54,6 +60,14 @@ class CellWeatherDescriptionVC: UIViewController {
             let dayNameString = dateFormatter.string(from: time)
             self.timeFromCellLabel.text =  "\(dayNameString)"
         }
+        dateFormatter.dateFormat = "HH-mm-ss"
+        if let time = dateFormatter.date(from: date){
+            dateFormatter.dateFormat = "HH"
+            let dayNameString = dateFormatter.string(from: time)
+            self.timeFromCellLabel.text =  "\(dayNameString) hours"
+        }
+        
+        
         
     }
     
@@ -75,7 +89,7 @@ extension CellWeatherDescriptionVC: UICollectionViewDelegate, UICollectionViewDa
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         switch collectionWetherInfo {
         case self.collectionWetherInfo:
-            return 1
+            return 2
         default: return 0
         }
     }
@@ -90,28 +104,36 @@ extension CellWeatherDescriptionVC: UICollectionViewDelegate, UICollectionViewDa
         default: return 0
         }
     }
-    enum si: String {
-        case windspeed = "kph"
-        case pressure = "mb"
-    }
+    
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = UICollectionViewCell()
         
-        if indexPath.section == 0{
-            if indexPath.row == 0{
-                guard let descripionCell = collectionView.dequeueReusableCell(withReuseIdentifier: DescriptionCell.indentifire, for: indexPath) as? DescriptionCell else {return cell}
-                let info = cellWeatherDescriptionVM.WeatherModel?.windspeed ?? 0.0
-                descripionCell.configure(description: "windspeed", info: info, si: si.windspeed.rawValue)
-                return descripionCell
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                
+                let info = cellWeatherDescriptionVM.WeatherModel?.windspeed ?? 0
+                return collectionView.CreatedescriptionCell(indexPath: indexPath, info: info, description: "windspeed", si: si.windspeed.rawValue)
             }
             if indexPath.row == 1{
-                guard let descripionCell = collectionView.dequeueReusableCell(withReuseIdentifier: DescriptionCell.indentifire, for: indexPath) as? DescriptionCell else {return cell}
+                
                 let info = cellWeatherDescriptionVM.WeatherModel?.pressure ?? 0.0
-                descripionCell.configure(description: "pressure", info: info, si: si.pressure.rawValue)
-                return descripionCell
+               
+                return collectionView.CreatedescriptionCell(indexPath: indexPath, info: info, description: "pressure", si: si.pressure.rawValue)
             }
             
+        }
+        if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                let info = cellWeatherDescriptionVM.WeatherModel?.feelslike ?? 0
+                return collectionView.CreatedescriptionCell(indexPath: indexPath, info: info, description: "feelslike", si: si.temp.rawValue)
+            }
+            if indexPath.row == 1 {
+                let info = cellWeatherDescriptionVM.WeatherModel?.icon ?? ""
+                return collectionView.CreatedescriptionCell(indexPath: indexPath, info: "", description: info, si: nil)
+            }
         }
         
         
@@ -120,12 +142,21 @@ extension CellWeatherDescriptionVC: UICollectionViewDelegate, UICollectionViewDa
         return cell
         
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10.0
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.view.bounds.size.width / 2 - 20, height: 250)
     }
     
     
     
-    
+    @IBAction private func crossButtonDidTap() {
+        self.dismiss(animated: true)
+    }
     
 }
+
+

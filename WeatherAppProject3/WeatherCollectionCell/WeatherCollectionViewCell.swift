@@ -24,6 +24,10 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.contentView.layer.cornerRadius = 10.0
+        self.contentView.layer.borderWidth = 2.0
+        self.contentView.layer.borderColor = UIColor.separator.cgColor
+        self.contentView.layer.masksToBounds = true
         registerCells()
         sendTableViewData()
         
@@ -78,6 +82,7 @@ extension WeatherCollectionViewCell: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { 
        
         cellDelegate?.collectionView(collectioncell: self, index: indexPath.row, didTappedInTableViewCell: tableView.cellForRow(at: indexPath) ?? UITableViewCell())
+        tableView.deselectRow(at: indexPath, animated: true)
         
     }
     

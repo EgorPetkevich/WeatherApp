@@ -14,6 +14,11 @@ class HourlyCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         
         super.awakeFromNib()
+        super.awakeFromNib()
+        self.contentView.layer.cornerRadius = 10.0
+        self.contentView.layer.borderWidth = 2.0
+        self.contentView.layer.borderColor = UIColor.separator.cgColor
+        self.contentView.layer.masksToBounds = true
         registerCells()
         sendCollectionViewData()
         

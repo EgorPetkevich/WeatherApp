@@ -23,19 +23,26 @@ class DescriptionCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.contentView.layer.cornerRadius = 10.0
-        self.contentView.layer.borderWidth = 5.0
-        self.contentView.layer.borderColor = UIColor.systemCyan.cgColor
+        self.contentView.layer.borderWidth = 2.0
+        self.contentView.layer.borderColor = UIColor.separator.cgColor
         self.contentView.layer.masksToBounds = true
     }
     
     
     
 
-    func configure(description: String, info: Double, si: String) {
-        self.infoLabel.text = "\(info) \(si)"
+    func configure<T: Any>(description: String, info: T, si: String?) {
+        if let si = si {
+            self.infoLabel.text = "\(info) \(si)"
+        }else {
+            self.infoLabel.text = "\(info)"
+        }
+       
         self.descriptionLabel.text = description
         self.cellImage.image = UIImage(named: "\(description)")
     }
     
-
+   
 }
+
+    
